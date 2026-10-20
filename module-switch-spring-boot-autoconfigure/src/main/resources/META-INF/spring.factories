@@ -1,0 +1,6 @@
+org.springframework.context.ApplicationContextInitializer=\
+io.github.ilyaslabs.moduleswitch.autoconfigure.ModuleSwitchContextInitializer
+
+org.springframework.boot.diagnostics.FailureAnalyzer=\
+io.github.ilyaslabs.moduleswitch.autoconfigure.ModuleSwitchConfigurationFailureAnalyzer,\
+io.github.ilyaslabs.moduleswitch.autoconfigure.OffModuleFailureAnalyzer
