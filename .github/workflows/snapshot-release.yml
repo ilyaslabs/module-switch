@@ -1,0 +1,38 @@
+name: Deploy Snapshot to Maven Central
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Build snapshot version from branch name
+        run: |
+          SANITIZED_BRANCH=$(echo "${GITHUB_REF_NAME}" | sed 's/[^A-Za-z0-9._-]/-/g')
+          echo "VERSION=${SANITIZED_BRANCH}-SNAPSHOT" >> "$GITHUB_ENV"
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build and test
+        run: ./gradlew build --no-daemon -Pversion="${VERSION}"
+
+      - name: Deploy SNAPSHOT
+        run: ./gradlew publishToMavenCentral --no-daemon --no-configuration-cache -Pversion="${VERSION}"
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.OSSRH_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.OSSRH_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_PASSPHRASE }}

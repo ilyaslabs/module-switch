@@ -1,26 +1,27 @@
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
+
 plugins {
     id("module-switch.java-conventions")
-    `maven-publish`
-}
-
-java {
-    withSourcesJar()
-    withJavadocJar()
+    id("com.vanniktech.maven.publish")
 }
 
 tasks.withType<Javadoc>().configureEach {
     (options as StandardJavadocDocletOptions).addBooleanOption("Xdoclint:none", true)
 }
 
+mavenPublishing {
+    configure(JavaLibrary(javadocJar = JavadocJar.Javadoc(), sourcesJar = true))
+    publishToMavenCentral(automaticRelease = true)
+    signAllPublications()
+    modulePom(project)
+}
+
 publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-            versionMapping {
-                usage("java-api") { fromResolutionOf("runtimeClasspath") }
-                usage("java-runtime") { fromResolutionResult() }
-            }
-            modulePom(this)
+    publications.withType<MavenPublication>().configureEach {
+        versionMapping {
+            usage("java-api") { fromResolutionOf("runtimeClasspath") }
+            usage("java-runtime") { fromResolutionResult() }
         }
     }
 }
