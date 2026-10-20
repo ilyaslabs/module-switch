@@ -1,4 +1,4 @@
-name: Deploy Snapshot to Maven Central
+name: Call CI/CD Snapshot Workflow
 
 on:
   push:
@@ -6,38 +6,10 @@ on:
       - main
 
 jobs:
-  snapshot:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Build snapshot version from branch name
-        run: |
-          SANITIZED_BRANCH=$(echo "${GITHUB_REF_NAME}" | sed 's/[^A-Za-z0-9._-]/-/g')
-          echo "VERSION=${SANITIZED_BRANCH}-SNAPSHOT" >> "$GITHUB_ENV"
-
-      - name: Set up Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '25'
-
-      - name: Import GPG key
-        id: gpg
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.GPG_PASSPHRASE }}
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Build and test
-        run: ./gradlew build --no-daemon -Pversion="${VERSION}"
-
-      - name: Deploy SNAPSHOT
-        run: ./gradlew publishToMavenCentral --no-daemon --no-configuration-cache -Pversion="${VERSION}" -Psigning.gnupg.keyName="${{ steps.gpg.outputs.keyid }}"
-        env:
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.OSSRH_USERNAME }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.OSSRH_PASSWORD }}
+  release:
+    uses: ilyaslabs/cicd/.github/workflows/gradle-snapshot-release.yml@claude/project-thread-spuea8
+    secrets:
+      OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+      OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
