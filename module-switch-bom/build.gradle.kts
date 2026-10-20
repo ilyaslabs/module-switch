@@ -2,7 +2,7 @@ import com.vanniktech.maven.publish.JavaPlatform
 
 plugins {
     `java-platform`
-    id("com.vanniktech.maven.publish")
+    id("module-switch.central-publishing")
 }
 
 description = "Module-Switch bill of materials."
@@ -19,7 +19,4 @@ dependencies {
 
 mavenPublishing {
     configure(JavaPlatform())
-    publishToMavenCentral(automaticRelease = true)
-    signAllPublications()
-    modulePom(project)
 }

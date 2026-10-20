@@ -3,7 +3,7 @@ import com.vanniktech.maven.publish.JavadocJar
 
 plugins {
     id("module-switch.java-conventions")
-    id("com.vanniktech.maven.publish")
+    id("module-switch.central-publishing")
 }
 
 tasks.withType<Javadoc>().configureEach {
@@ -12,9 +12,6 @@ tasks.withType<Javadoc>().configureEach {
 
 mavenPublishing {
     configure(JavaLibrary(javadocJar = JavadocJar.Javadoc(), sourcesJar = true))
-    publishToMavenCentral(automaticRelease = true)
-    signAllPublications()
-    modulePom(project)
 }
 
 publishing {
