@@ -6,7 +6,9 @@ Run a Spring Boot modular monolith today, and move any module into its own servi
 - Modules talk to each other only through interfaces in an `-api` package. Callers get the local implementation or a generated HTTP client, depending on configuration.
 - A `local` module can be exposed on an internal port so other deployments can call it.
 
-Requires JDK 25+ and Spring Boot 4. The full design is in [docs/design.md](docs/design.md).
+Requires JDK 25+ and Spring Boot 4.
+
+**New here? Start with the step-by-step [developer guide](docs/developer-guide.md).** The full design is in [docs/design.md](docs/design.md).
 
 ## Install
 
