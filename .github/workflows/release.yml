@@ -6,7 +6,7 @@ on:
 
 jobs:
   release:
-    uses: ilyaslabs/cicd/.github/workflows/gradle-release.yml@claude/project-thread-spuea8
+    uses: ilyaslabs/cicd/.github/workflows/gradle-release.yml@main
     secrets:
       OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
       OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}

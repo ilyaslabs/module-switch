@@ -5,4 +5,4 @@ on:
 
 jobs:
   call-pr-checks:
-    uses: ilyaslabs/cicd/.github/workflows/gradle-pr-checks.yml@claude/project-thread-spuea8
+    uses: ilyaslabs/cicd/.github/workflows/gradle-pr-checks.yml@main
